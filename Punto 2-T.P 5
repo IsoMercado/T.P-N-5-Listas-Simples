@@ -1,0 +1,140 @@
+#include <iostream>
+using namespace std;
+
+struct Nodo{
+	int dato;
+	Nodo*siguiente;
+};
+
+struct Lista{
+	Nodo*inicio;
+	Nodo*final;
+	int cantidad;
+};
+
+void iniciar_lista(Lista& lista){
+	lista.inicio=nullptr;
+	lista.final=nullptr;
+	lista.cantidad=0;
+}
+
+Nodo*crear_nodo(int valor){
+	Nodo* nuevo=new Nodo;
+	if (nuevo!=nullptr){
+		nuevo->dato=valor;
+		nuevo->siguiente=nullptr;
+	}
+	return nuevo;
+}
+
+void agregar_inicio(Lista& lista, Nodo*nuevo){
+	if (lista.inicio==nullptr){
+		lista.inicio=nuevo;
+		lista.final=nuevo;
+	} 
+	else {
+		nuevo->siguiente=lista.inicio;
+		lista.inicio=nuevo;
+	}
+	lista.cantidad++;
+}
+
+void agregar_final(Lista& lista, Nodo*nuevo){
+	if (lista.inicio==nullptr){
+		lista.inicio=nuevo;
+		lista.final=nuevo;
+	} 
+	else {
+		lista.final->siguiente=nuevo;
+		lista.final=nuevo;
+	}
+	lista.cantidad++;
+}
+
+void mostrar_lista(Nodo*head){
+	Nodo*aux=head;
+	while (aux!=nullptr){
+		cout<<aux->dato<<" ";
+		aux=aux->siguiente;
+	}
+	cout<<endl;
+}
+
+Nodo*eliminar_inicio(Lista& lista){
+	Nodo*eliminado=nullptr;
+	if (lista.inicio!=nullptr){
+		eliminado=lista.inicio;
+		lista.inicio=lista.inicio->siguiente;
+		eliminado->siguiente=nullptr;
+		lista.cantidad--;
+		if (lista.inicio==nullptr) lista.final=nullptr;
+	}
+	return eliminado;
+}
+
+int minimo(Nodo*head){
+	if (head==nullptr) return-1;
+	int min=head->dato;
+	Nodo*aux=head->siguiente;
+	while (aux!=nullptr){
+		if (aux->dato<min)
+			min=aux->dato;
+		aux=aux->siguiente;
+	}
+	return min;
+}
+
+Nodo* eliminar_minimo(Lista& lista){
+	if (lista.inicio==nullptr) return nullptr;
+	
+	Nodo*anterior=nullptr,*actual=lista.inicio;
+	Nodo*anteriorMin=nullptr,*minNodo=lista.inicio;
+	int minValor=lista.inicio->dato;
+	
+	while (actual!=nullptr){
+		if (actual->dato<minValor){
+			minValor=actual->dato;
+			anteriorMin=anterior;
+			minNodo=actual;
+		}
+		anterior=actual;
+		actual=actual->siguiente;
+	}
+	
+	if (minNodo==lista.inicio){
+		lista.inicio=minNodo->siguiente;
+		if (lista.inicio==nullptr) lista.final=nullptr;
+	} 
+	else {
+		anteriorMin->siguiente=minNodo->siguiente;
+		if (minNodo==lista.final) lista.final=anteriorMin;
+	}
+	minNodo->siguiente=nullptr;
+	lista.cantidad--;
+	return minNodo;
+}
+
+int cantidad_elementos(const Lista& lista){
+	return lista.cantidad;
+}
+
+int main(){
+	Lista lista;
+	iniciar_lista(lista);
+	
+	agregar_final(lista, crear_nodo(10));
+	agregar_final(lista, crear_nodo(3));
+	agregar_final(lista, crear_nodo(7));
+	agregar_final(lista, crear_nodo(1));
+	
+	cout<<"La lista es: ";
+	mostrar_lista(lista.inicio);
+	cout<<"Mini: "<<minimo(lista.inicio)<<endl;
+	Nodo* eliminado=eliminar_minimo(lista);
+	if (eliminado!=nullptr) delete eliminado;
+	cout<<"Lista sin el mini: ";
+	mostrar_lista(lista.inicio);
+	cout<<"Cantidad actual: "<<cantidad_elementos(lista)<<endl;
+	
+	return 0;
+}
