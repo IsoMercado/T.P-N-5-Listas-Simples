@@ -1,0 +1,80 @@
+#include <iostream>
+using namespace std;
+
+template <typename T>
+struct Nodo{
+	T dato;
+	Nodo*siguiente;
+};
+
+template <typename T>
+void agregar_final(Nodo<T>*& lista, T valor){
+	Nodo<T>* nuevo=new Nodo<T>{valor, nullptr};
+	if (lista==nullptr) {
+		lista=nuevo;
+	} else {
+		Nodo<T>* aux=lista;
+		while (aux->siguiente!=nullptr)
+			aux=aux->siguiente;
+		aux->siguiente=nuevo;
+	}
+}
+
+template <typename T>
+	void mostrar_lista(Nodo<T>* lista){
+	while (lista!=nullptr){
+		cout<<lista->dato<<" ";
+		lista=lista->siguiente;
+	}
+	cout<<endl;
+}
+	bool es_primo(int n){
+		if (n<=1) return false;
+		for (int i=2; i*i<=n; ++i){
+			if (n%i==0) return false;
+		}
+		return true;
+	}
+	
+	int contar_primos(Nodo<int>* lista){
+		int cuenta=0;
+		while (lista!=nullptr){
+			if (es_primo(lista->dato)) cuenta++;
+			lista=lista->siguiente;
+		}
+		return cuenta;
+	}
+	
+	void contar_letras(Nodo<char>*lista, int& mayus, int& minus){
+		mayus=minus=0;
+		while (lista!=nullptr){
+			if (isupper(lista->dato)) mayus++;
+			else if (islower(lista->dato)) minus++;
+			lista=lista->siguiente;
+		}
+	}
+	
+	int main(){
+		Nodo<int>* enteros=nullptr;
+		agregar_final(enteros, 2);
+		agregar_final(enteros, 4);
+		agregar_final(enteros, 7);
+		agregar_final(enteros, 9);
+		
+		cout<<"lista de enteros: ";
+		mostrar_lista(enteros);
+		cout<<"cant de primos: "<<contar_primos(enteros)<<endl;
+		
+		Nodo<char>*caracteres=nullptr;
+		agregar_final(caracteres, 'A');
+		agregar_final(caracteres, 'b');
+		agregar_final(caracteres, 'Z');
+		agregar_final(caracteres, 'm');
+		
+		int mayus, minus;
+		contar_letras(caracteres, mayus, minus);
+		cout<< "may: "<<mayus<<", min: "<<minus<<endl;
+		
+		return 0;
+	}
+	
