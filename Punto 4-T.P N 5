@@ -1,0 +1,259 @@
+#include <iostream>
+using namespace std;
+
+struct Nodo{
+	int dato;
+	Nodo*siguiente;
+};
+
+struct Lista{
+	Nodo*inicio;
+	Nodo*final;
+	int cantidad;
+};
+
+void iniciar_lista(Lista& lista){
+	lista.inicio=nullptr;
+	lista.final=nullptr;
+	lista.cantidad=0;
+}
+
+Nodo*crear_nodo(int valor){
+	Nodo* nuevo=new Nodo;
+	if (nuevo!=nullptr){
+		nuevo->dato=valor;
+		nuevo->siguiente=nullptr;
+	}
+	return nuevo;
+}
+
+void agregar_inicio(Lista& lista, Nodo*nuevo){
+	if (lista.inicio==nullptr){
+		lista.inicio=nuevo;
+		lista.final=nuevo;
+	} 
+	else {
+		nuevo->siguiente=lista.inicio;
+		lista.inicio=nuevo;
+	}
+	lista.cantidad++;
+}
+
+void agregar_final(Lista& lista, Nodo*nuevo){
+	if (lista.inicio==nullptr){
+		lista.inicio=nuevo;
+		lista.final=nuevo;
+	} 
+	else {
+		lista.final->siguiente=nuevo;
+		lista.final=nuevo;
+	}
+	lista.cantidad++;
+}
+
+void mostrar_lista(Nodo*head){
+	Nodo*aux=head;
+	while (aux!=nullptr){
+		cout<<aux->dato<<" ";
+		aux=aux->siguiente;
+	}
+	cout<<endl;
+}
+
+Nodo*eliminar_inicio(Lista& lista){
+	Nodo*eliminado=nullptr;
+	if (lista.inicio!=nullptr){
+		eliminado=lista.inicio;
+		lista.inicio=lista.inicio->siguiente;
+		eliminado->siguiente=nullptr;
+		lista.cantidad--;
+		if (lista.inicio==nullptr) lista.final=nullptr;
+	}
+	return eliminado;
+}
+
+int minimo(Nodo*head){
+	if (head==nullptr) return-1;
+	int min=head->dato;
+	Nodo*aux=head->siguiente;
+	while (aux!=nullptr){
+		if (aux->dato<min)
+			min=aux->dato;
+		aux=aux->siguiente;
+	}
+	return min;
+}
+
+Nodo* eliminar_minimo(Lista& lista){
+	if (lista.inicio==nullptr) return nullptr;
+	
+	Nodo*anterior=nullptr,*actual=lista.inicio;
+	Nodo*anteriorMin=nullptr,*minNodo=lista.inicio;
+	int minValor=lista.inicio->dato;
+	
+	while (actual!=nullptr){
+		if (actual->dato<minValor){
+			minValor=actual->dato;
+			anteriorMin=anterior;
+			minNodo=actual;
+		}
+		anterior=actual;
+		actual=actual->siguiente;
+	}
+	
+	if (minNodo==lista.inicio){
+		lista.inicio=minNodo->siguiente;
+		if (lista.inicio==nullptr) lista.final=nullptr;
+	} 
+	else {
+		anteriorMin->siguiente=minNodo->siguiente;
+		if (minNodo==lista.final) lista.final=anteriorMin;
+	}
+	minNodo->siguiente=nullptr;
+	lista.cantidad--;
+	return minNodo;
+}
+
+int cantidad_elementos(const Lista& lista){
+	return lista.cantidad;
+}
+int buscar_indice(const Lista& lista, int valor){
+Nodo*aux=lista.inicio;
+int indice=0;
+	while (aux!=nullptr){
+		if (aux->dato==valor) return indice;
+	    aux=aux->siguiente;
+	    indice++;
+    }   
+    return -1;
+}
+	
+Nodo*buscar_por_indice(const Lista& lista, int indice){
+    if (indice<0||indice>=lista.cantidad) return nullptr;
+		Nodo*aux=lista.inicio;
+		int i=0;
+		while (aux!=nullptr&&i<indice){
+			aux=aux->siguiente;
+			i++;
+		}
+		return aux;
+	}
+	
+struct Pila{
+	Nodo*tope;
+};
+	
+void iniciar_pila(Pila& pila){
+	pila.tope=nullptr;
+}
+		
+void push(Pila& pila, int valor){
+	Nodo* nuevo=new Nodo{valor, pila.tope};
+	pila.tope=nuevo;
+}
+			
+int pop(Pila& pila){
+	if (pila.tope==nullptr) return -1;
+	Nodo* eliminado=pila.tope;
+	int valor=eliminado->dato;
+	pila.tope=eliminado->siguiente;
+    delete eliminado;
+    return valor;
+}
+				
+	bool pila_vacia(const Pila& pila){
+	return pila.tope==nullptr;
+}
+					
+//coso de cola
+struct Cola{
+	Nodo*frente;
+	Nodo*fin;
+	int cantidad;
+};
+					
+void iniciar_cola(Cola& cola){
+	cola.frente=nullptr;
+	cola.fin=nullptr;
+	cola.cantidad=0;
+}
+					
+void enqueue(Cola& cola, int valor){
+Nodo* nuevo=new Nodo{valor, nullptr};
+	if (cola.frente==nullptr){
+		cola.frente=nuevo;
+		cola.fin=nuevo;
+		} 
+	else{
+		cola.fin->siguiente=nuevo;
+		cola.fin=nuevo;
+	}
+	cola.cantidad++;
+	}
+						
+	int dequeue(Cola& cola){
+		if (cola.frente==nullptr) return -1;
+		Nodo*eliminado=cola.frente;
+		int valor=eliminado->dato;
+		cola.frente=eliminado->siguiente;
+		if (cola.frente==nullptr) cola.fin=nullptr;
+		delete eliminado;
+		cola.cantidad--;
+		return valor;
+	}
+	int cantidad_elementos(const Cola& cola){
+	return cola.cantidad;
+	}
+int main(){
+	Lista lista;
+	iniciar_lista(lista);
+	
+	agregar_final(lista, crear_nodo(10));
+	agregar_final(lista, crear_nodo(3));
+	agregar_final(lista, crear_nodo(7));
+	agregar_final(lista, crear_nodo(1));
+	
+	cout<<"La lista es: ";
+	mostrar_lista(lista.inicio);
+	cout<<"Mini: "<<minimo(lista.inicio)<<endl;
+	Nodo* eliminado=eliminar_minimo(lista);
+	if (eliminado!=nullptr) delete eliminado;
+	cout<<"Lista sin el mini: ";
+	mostrar_lista(lista.inicio);
+	cout<<"Cantidad actual: "<<cantidad_elementos(lista)<<endl;
+	int valor=10;
+	int pos=buscar_indice(lista, valor);
+	cout<<"Indice del valor "<<valor<<": "<<pos<<endl;
+	int i=1;
+	Nodo*nodo=buscar_por_indice(lista, i);
+	if (nodo!=nullptr)
+		cout<<"Valor en indice "<<i<<": "<<nodo->dato<<endl;
+	else
+		cout<<"No hay elemento en el indice "<<i<<endl;
+	
+	//coso de pila
+	Pila pila;
+	iniciar_pila(pila);
+	push(pila, 1);
+	push(pila, 2);
+	push(pila, 3);
+	
+	cout<<"La Pila: ";
+	while (!pila_vacia(pila)){
+		cout<<pop(pila)<<" ";
+	}
+	cout<<endl;
+	//coso de Cola
+	Cola cola;
+	iniciar_cola(cola);
+	enqueue(cola, 10);
+	enqueue(cola, 20);
+	enqueue(cola, 30);
+	
+	cout<<"La Cola: ";
+	while (cantidad_elementos(cola)>0){
+		cout<<dequeue(cola)<<" ";
+	}
+	cout<<endl;
+	return 0;
+}
