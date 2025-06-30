@@ -1,0 +1,105 @@
+#include <iostream>
+using namespace std;
+
+struct Nodo{
+	int dato;
+	Nodo*siguiente;
+};
+
+void agregar_final(Nodo*& lista, int valor){
+	Nodo* nuevo=new Nodo{valor, nullptr};
+	if (lista==nullptr) {
+		lista=nuevo;
+	} else {
+		Nodo*aux=lista;
+		while (aux->siguiente!=nullptr)
+			aux=aux->siguiente;
+		aux->siguiente=nuevo;
+	}
+}
+
+void mostrar_lista(Nodo*lista){
+	while (lista!= nullptr){
+		cout<<lista->dato<<" ";
+		lista=lista->siguiente;
+	}
+	cout<<endl;
+}
+
+void ordenar_seleccion(Nodo*lista){
+	for (Nodo*i=lista; i!=nullptr; i=i->siguiente){
+		Nodo*min=i;
+		for (Nodo*j=i->siguiente; j!=nullptr; j=j->siguiente){
+			if (j->dato<min->dato) min=j;
+		}
+		if (min!=i) swap(min->dato, i->dato);
+	}
+}
+
+Nodo*combinar_desordenado(Nodo*l1, Nodo*l2){
+	Nodo* nueva=nullptr;
+	while (l1!=nullptr){
+		agregar_final(nueva, l1->dato);
+		l1=l1->siguiente;
+	}
+	while (l2!=nullptr){
+		agregar_final(nueva, l2->dato);
+		l2=l2->siguiente;
+	}
+	return nueva;
+}
+
+Nodo*combinar_ordenado(Nodo*l1, Nodo*l2){
+	Nodo*resultado=nullptr;
+	while (l1!=nullptr&&l2!=nullptr){
+		if (l1->dato<l2->dato){
+			agregar_final(resultado, l1->dato);
+			l1=l1->siguiente;
+		} 
+		else{
+			agregar_final(resultado, l2->dato);
+			l2=l2->siguiente;
+		}
+	}
+	while (l1!=nullptr){
+		agregar_final(resultado, l1->dato);
+		l1=l1->siguiente;
+	}
+	while (l2!=nullptr){
+		agregar_final(resultado, l2->dato);
+		l2=l2->siguiente;
+	}
+	return resultado;
+}
+
+int main(){
+	Nodo*lista=nullptr;
+	agregar_final(lista, 9);
+	agregar_final(lista, 2);
+	agregar_final(lista, 7);
+	agregar_final(lista, 1);
+	
+	cout<<"real: ";
+	mostrar_lista(lista);
+	ordenar_seleccion(lista);
+	cout<<"ordenada: ";
+	mostrar_lista(lista);
+	
+	Nodo*l1=nullptr, *l2=nullptr;
+	agregar_final(l1, 4);
+	agregar_final(l1, 1);
+	agregar_final(l2, 5);
+	agregar_final(l2, 2);
+	
+	Nodo*combinada1=combinar_desordenado(l1, l2);
+	cout<<"combo real: ";
+	mostrar_lista(combinada1);
+	
+	ordenar_seleccion(l1);
+	ordenar_seleccion(l2);
+	Nodo*combinada2=combinar_ordenado(l1, l2);
+	cout<<"combo ordenado: ";
+	mostrar_lista(combinada2);
+	
+	return 0;
+}
