@@ -1,0 +1,5 @@
+1_Funcion Enigma: esta función imprime los valores desde el final al principio y el propósito que tiene es imprimir en orden inverso.
+
+2_Funcion Misterio: lo que hace es la cuenta los nodos recursivamente y retornar cantidad de nodos
+
+3_Funcion Desconocido: y por ultimo el desconocido busca el último nodo recursivamente para retornar puntero al último nodo ósea 8
