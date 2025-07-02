@@ -1,0 +1,84 @@
+#include <iostream>
+using namespace std;
+typedef struct nodo*pnodo;
+
+struct nodo{
+	int dato;
+	pnodo ant;
+	pnodo sig;
+};
+
+void CrearNodo(pnodo &nuevo, int valor){
+	nuevo=new nodo;
+	if (nuevo!=NULL){
+		nuevo->dato=valor;
+		nuevo->ant=NULL;
+		nuevo->sig=NULL;
+	}
+}
+
+void InsertarFinal(pnodo &inicio, pnodo &fin, pnodo nuevo){
+	if (inicio==NULL){
+		inicio=nuevo;
+		fin=nuevo;
+	} 
+	else{
+		fin->sig=nuevo;
+		nuevo->ant=fin;
+		fin=nuevo;
+	}
+}
+
+void MostrarLista(pnodo inicio){
+	pnodo i=inicio;
+	while (i!=NULL){
+		cout<<i->dato<<" ";
+		i=i->sig;
+	}
+	cout<<endl;
+}
+
+void MostrarMayorYMenor(pnodo inicio){
+	if (inicio==NULL) {
+		cout<<"esta lista se encuentra vacia"<<endl;
+		return;
+	}
+	
+	int mayor=inicio->dato;
+	int menor=inicio->dato;
+	pnodo i=inicio->sig;
+	
+	while (i!=NULL){
+		if (i->dato>mayor)
+			mayor=i->dato;
+		if (i->dato<menor)
+			menor=i->dato;
+		i=i->sig;
+	}
+	
+	cout<<"mayor: "<<mayor<<endl;
+	cout<<"menor: "<<menor<<endl;
+}
+
+
+int main(){
+	pnodo inicio=NULL, fin=NULL;
+	pnodo n1, n2, n3, n4;
+	
+	CrearNodo(n1, 15);
+	CrearNodo(n2, 7);
+	CrearNodo(n3, 22);
+	CrearNodo(n4, 3);
+	
+	InsertarFinal(inicio, fin, n1);
+	InsertarFinal(inicio, fin, n2);
+	InsertarFinal(inicio, fin, n3);
+	InsertarFinal(inicio, fin, n4);
+	
+	cout<<"lista: ";
+	MostrarLista(inicio);
+	
+	MostrarMayorYMenor(inicio);
+	
+	return 0;
+}
