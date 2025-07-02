@@ -1,0 +1,69 @@
+#include <iostream>
+using namespace std;
+typedef struct nodo*pnodo;
+
+struct nodo{
+	int dato;
+	pnodo ant;
+	pnodo sig;
+};
+
+void CrearNodo(pnodo &nuevo, int valor){
+	nuevo=new nodo;
+	if (nuevo!=NULL){
+		nuevo->dato=valor;
+		nuevo->ant=NULL;
+		nuevo->sig=NULL;
+	}
+}
+
+void InsertarInicio(pnodo &inicio, pnodo &fin, pnodo nuevo){
+	if (inicio==NULL){
+		inicio=nuevo;
+		fin=nuevo;
+	} 
+	else{
+		nuevo->sig=inicio;
+		inicio->ant=nuevo;
+		inicio=nuevo;
+	}
+}
+
+void MostrarLista(pnodo inicio){
+	pnodo i=inicio;
+	while (i!=NULL){
+		cout<<i->dato;
+		i=i->sig;
+	}
+	cout<<endl;
+}
+
+void DecimalABinario(int numero, pnodo &inicio, pnodo &fin){
+	if (numero==0){
+		pnodo nodoCero;
+		CrearNodo(nodoCero, 0);
+		InsertarInicio(inicio, fin, nodoCero);
+		return;
+	}
+	
+	while (numero>0){
+		int bit=numero%2;
+		numero=numero/2;
+		
+		pnodo nuevo;
+		CrearNodo(nuevo, bit);
+		InsertarInicio(inicio, fin, nuevo);
+	}
+}
+
+int main(){
+	int numero;
+	pnodo inicio=NULL, fin=NULL;
+	
+	cin>>numero;
+	DecimalABinario(numero, inicio, fin);
+	cout<<"numero en binario: ";
+	MostrarLista(inicio);
+	
+	return 0;
+}
