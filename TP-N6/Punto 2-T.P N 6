@@ -1,0 +1,110 @@
+#include <iostream>
+using namespace std;
+typedef struct nodo*pnodo;
+
+struct nodo{
+	int dato;
+	pnodo ant;
+	pnodo sig;
+};
+
+void CrearNodo(pnodo &nuevo, int valor){
+	nuevo=new nodo;
+	if (nuevo!=NULL){
+		nuevo->dato=valor;
+		nuevo->ant=NULL;
+		nuevo->sig=NULL;
+	}
+}
+	
+void InsertarFinal(pnodo &inicio, pnodo &fin, pnodo nuevo){
+	if (inicio==NULL){
+		inicio=nuevo;
+		fin=nuevo;
+	} 
+	else{
+		fin->sig=nuevo;
+		nuevo->ant=fin;
+		fin=nuevo;
+	}
+}
+
+void MostrarLista(pnodo inicio){
+	pnodo i=inicio;
+	while (i!=NULL){
+		cout<<i->dato<<" ";
+		i=i->sig;
+	}
+	cout<<endl;
+}
+
+void EliminarInicio(pnodo &inicio, pnodo &fin){
+	if (inicio==NULL){
+		cout<<"esta lista se encuentra vacia"<<endl;
+		return;
+	}
+	
+	pnodo eliminado=inicio;
+	
+	if (inicio==fin){
+		inicio=NULL;
+		fin=NULL;
+	}
+	else{
+		inicio=inicio->sig;
+		inicio->ant=NULL;
+	}
+	
+	delete eliminado;
+}
+
+void EliminarFinal(pnodo &inicio, pnodo &fin){
+	if (fin==NULL){
+		cout<<"esta lista se encuentra vacia" << endl;
+		return;
+	}
+	
+	pnodo eliminado=fin;
+	
+	if (inicio==fin){ 
+		inicio=NULL;
+		fin=NULL;
+	}
+	else{
+		fin=fin->ant;
+		fin->sig=NULL;
+	}
+	
+	delete eliminado;
+}
+
+//pruebita pequeña
+int main(){
+	pnodo inicio=NULL, fin=NULL;
+	pnodo n1, n2, n3;
+	
+	CrearNodo(n1, 10);
+	CrearNodo(n2, 20);
+	CrearNodo(n3, 30);
+	
+	InsertarFinal(inicio, fin, n1);
+	InsertarFinal(inicio, fin, n2);
+	InsertarFinal(inicio, fin, n3);
+	
+	cout<<"lista normal: ";
+	MostrarLista(inicio);
+	
+	EliminarInicio(inicio, fin);
+	cout<<"inicio eliminado: ";
+	MostrarLista(inicio);
+	
+	EliminarFinal(inicio, fin);
+	cout<<"final eliminado: ";
+	MostrarLista(inicio);
+	
+	EliminarInicio(inicio, fin); 
+	cout<<"ultimo nodo eliminado: ";
+	MostrarLista(inicio);
+	
+	return 0;
+}
