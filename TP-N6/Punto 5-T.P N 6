@@ -1,0 +1,88 @@
+#include <iostream>
+using namespace std;
+typedef struct nodo *pnodo;
+
+struct nodo{
+	int dato;
+	pnodo ant;
+	pnodo sig;
+};
+
+void CrearNodo(pnodo &nuevo, int valor){
+	nuevo=new nodo;
+	if (nuevo!=NULL){
+		nuevo->dato=valor;
+		nuevo->ant=NULL;
+		nuevo->sig=NULL;
+	}
+}
+
+
+void InsertarFinal(pnodo &inicio, pnodo &fin, pnodo nuevo){
+	if (inicio==NULL) {
+		inicio=nuevo;
+		fin=nuevo;
+	} 
+	else{
+		fin->sig=nuevo;
+		nuevo->ant=fin;
+		fin=nuevo;
+	}
+}
+
+void MostrarLista(pnodo inicio){
+	pnodo i=inicio;
+	while (i!=NULL){
+		cout<<i->dato<<" ";
+		i=i->sig;
+	}
+	cout<<endl;
+}
+
+void EliminarMultiplosDe3(pnodo &inicio, pnodo &fin){
+	pnodo actual=inicio;
+	while (actual!=NULL){
+		pnodo siguiente=actual->sig;
+		if (actual->dato%3==0){
+			if (actual->ant!=NULL)
+				actual->ant->sig=actual->sig;
+			else
+				inicio=actual->sig;
+			
+			if (actual->sig!=NULL)
+				actual->sig->ant=actual->ant;
+			else
+				fin=actual->ant;
+			
+			delete actual;
+		}
+		actual=siguiente;
+	}
+}
+
+int main(){
+	pnodo inicio=NULL, fin=NULL;
+	pnodo n1, n2, n3, n4, n5;
+	
+	CrearNodo(n1, 6);    
+	CrearNodo(n2, 10);
+	CrearNodo(n3, 15); 
+    CrearNodo(n4, 22);
+	CrearNodo(n5, 9);    
+	
+	InsertarFinal(inicio, fin, n1);
+	InsertarFinal(inicio, fin, n2);
+	InsertarFinal(inicio, fin, n3);
+	InsertarFinal(inicio, fin, n4);
+	InsertarFinal(inicio, fin, n5);
+	
+	cout<<"lista normal ";
+	MostrarLista(inicio);
+	
+	EliminarMultiplosDe3(inicio, fin);
+	
+	cout<<"lista final: ";
+	MostrarLista(inicio);
+	
+	return 0;
+}
